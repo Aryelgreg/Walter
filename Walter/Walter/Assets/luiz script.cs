@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.TerrainTools;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PersonagemController : MonoBehaviour
 {
@@ -14,8 +17,29 @@ public class PersonagemController : MonoBehaviour
     public float atritoNoChao = 2f;
     public float skinWidth = 0.02f;
     public int vidaMaxima = 100;
-    private int vidaAtual;
-    private bool estaNoAr = false;
+    public int vidaAtual;
+    private bool estaNoChao = false;
+    private bool podePular = true;
+    private bool podeDuploPulo = true;
+    private bool estaGameOver = false;
+
+
+
+    public Text moedasText;
+    private int moedasColetadas = 0;
+    public int moedas;
+
+    [SerializeField] private GameObject GameOverLayer;
+
+    private enum EstadoPersonagem
+    {
+        Parado,
+        Andando,
+        Pulando,
+        Caindo
+    }
+
+    private EstadoPersonagem estado = EstadoPersonagem.Parado;
 
     void Start()
     {
@@ -27,57 +51,108 @@ public class PersonagemController : MonoBehaviour
 
     void Update()
     {
+        // Verifique se o jogo está no estado de "Game Over" antes de permitir movimento ou ações do jogador
+        if (!estaGameOver)
+        {
+            HandleMovimento();
+            HandlePulo();
+            UpdateAnimacoes();
+        }
+        // Outro código de atualização aqui...
+    }
+
+    void HandleMovimento()
+    {
         float movimentoHorizontal = Input.GetAxis("Horizontal");
         Vector2 direcaoMovimento = new Vector2(movimentoHorizontal, 0);
-
-        if (!estaNoAr)
-        {
-            rb.velocity = new Vector2(rb.velocity.x * atritoNoChao, rb.velocity.y);
-        }
-
-        Vector2 origin = new Vector2(transform.position.x, transform.position.y - skinWidth);
-        RaycastHit2D hit = Physics2D.Raycast(origin, direcaoMovimento, velocidadeMovimento * Time.deltaTime + skinWidth);
-
-        if (hit.collider != null && hit.collider.CompareTag("Chao"))
-        {
-            estaNoAr = false;
-            float ajusteX = Mathf.Abs(hit.point.x - origin.x) - skinWidth;
-            float ajusteY = Mathf.Abs(hit.point.y - origin.y) - skinWidth;
-
-            if (Mathf.Abs(ajusteX) < Mathf.Abs(ajusteY))
-            {
-                transform.Translate(new Vector2(ajusteX * Mathf.Sign(direcaoMovimento.x), 0));
-            }
-            else
-            {
-                transform.Translate(new Vector2(0, ajusteY * Mathf.Sign(direcaoMovimento.y)));
-            }
-        }
 
         rb.velocity = new Vector2(movimentoHorizontal * velocidadeMovimento, rb.velocity.y);
 
         if (movimentoHorizontal < 0)
         {
             spriteRenderer.flipX = true;
+            estado = EstadoPersonagem.Andando;
         }
         else if (movimentoHorizontal > 0)
         {
             spriteRenderer.flipX = false;
+            estado = EstadoPersonagem.Andando;
+        }
+        else
+        {
+            estado = EstadoPersonagem.Parado;
         }
 
-        if (Input.GetButtonDown("Jump") && !estaNoAr)
+        if (Mathf.Abs(rb.velocity.y) < 0.01f)
         {
-            rb.AddForce(Vector2.up * forcaPulo, ForceMode2D.Impulse);
-            estaNoAr = true;
+            estaNoChao = true;
+        }
+        else
+        {
+            estaNoChao = false;
+        }
+    }
+
+    void HandlePulo()
+    {
+        if (estaNoChao)
+        {
+            podePular = true;
+            podeDuploPulo = true;
+        }
+        else
+        {
+            podePular = false; // Não é possível pular enquanto estiver no ar
         }
 
-        animator.SetFloat("Velocidade", Mathf.Abs(movimentoHorizontal));
-        animator.SetBool("NoAr", estaNoAr);
-
-        // Comando para atacar (neste exemplo, é a tecla "Z").
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetButtonDown("Jump"))
         {
-            Atacar();
+            if (podePular)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, forcaPulo);
+                estado = EstadoPersonagem.Pulando;
+                podePular = false; // Desativa o pulo após usá-lo
+            }
+            else if (podeDuploPulo)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, forcaPulo);
+                podeDuploPulo = false;
+                estado = EstadoPersonagem.Pulando;
+            }
+        }
+    }
+
+    void UpdateAnimacoes()
+    {
+        animator.SetFloat("Velocidade", Mathf.Abs(rb.velocity.x));
+        animator.SetBool("NoChao", estaNoChao);
+        
+        switch (estado)
+        {
+            case EstadoPersonagem.Parado:
+                animator.SetBool("Parado", true);
+                animator.SetBool("Andando", false);
+                animator.SetBool("Pulando", false);
+                animator.SetBool("Caindo", false);
+                break;
+            case EstadoPersonagem.Andando:
+                animator.SetBool("Parado", false);
+                animator.SetBool("Andando", true);
+                animator.SetBool("Pulando", false);
+                animator.SetBool("Caindo", false);
+                break;
+            case EstadoPersonagem.Pulando:
+                animator.SetBool("Parado", false);
+                animator.SetBool("Andando", false);
+                animator.SetBool("Pulando", true);
+                animator.SetBool("Caindo", false);
+                break;
+            case EstadoPersonagem.Caindo:
+                animator.SetBool("Parado", false);
+                animator.SetBool("Andando", false);
+                animator.SetBool("Pulando", false);
+                animator.SetBool("Caindo", true);
+                break;
         }
     }
 
@@ -85,7 +160,8 @@ public class PersonagemController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Chao"))
         {
-            estaNoAr = false;
+            estado = EstadoPersonagem.Parado;
+            estaNoChao = true;
         }
     }
 
@@ -96,41 +172,40 @@ public class PersonagemController : MonoBehaviour
         if (vidaAtual <= 0)
         {
             Morrer();
+            
         }
     }
 
     void Morrer()
     {
-        gameObject.SetActive(false);
-    }
+        animator.SetTrigger("Morrer");
+        // Desativa o componente Rigidbody2D para parar o movimento
+        rb.velocity = Vector2.zero;
+        rb.gravityScale = 0f;
 
-    void Atacar()
-    {
-        // Implemente o comportamento de ataque aqui.
-        // Por exemplo, você pode usar raycasts para verificar se há inimigos na frente do personagem.
-        // Se um inimigo estiver dentro do alcance, reduza a vida do inimigo.
+        // Define estaGameOver como true para indicar o estado de "Game Over"
+        estaGameOver = true;
 
-        // Exemplo simplificado (use raycasts para detecção precisa):
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, spriteRenderer.flipX ? Vector2.left : Vector2.right, 1f);
-        if (hit.collider != null && hit.collider.CompareTag("Inimigo"))
+        // Ativa o objeto "GameOverLayer"
+        if (GameOverLayer != null)
         {
-            hit.collider.GetComponent<Inimigo>().SofrerDano(10); // Chame a função de dano do inimigo.
+            GameOverLayer.SetActive(true);
         }
     }
-
-    internal void PerderVida()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        throw new NotImplementedException();
-    }
-    private void FixedUpdate()
-    {
-        // Check if the attack button is pressed
-        if (Input.GetButtonDown("Attack"))
+        if (other.gameObject.CompareTag("moeda"))
         {
-            // Set the animator state to the attack state
-            animator.SetTrigger("Attack");
+            moedas++; // Incrementa o contador de moedas
+            Destroy(other.gameObject); // Destroi a moeda coletada
+            AtualizarTextoMoedas(); // Atualiza o texto na tela
         }
+        
     }
 
+    void AtualizarTextoMoedas()
+    {
+        moedasText.text = " " + moedas.ToString(); // Atualiza o texto na tela com o número de moedas coletadas
+    }
 
 }

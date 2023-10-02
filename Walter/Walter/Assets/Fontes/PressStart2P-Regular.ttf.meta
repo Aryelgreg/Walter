@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fe8878048ec69784bb6b276fa0db63a6
+guid: 2d2dc7e82c59e634b8bca33ecd711884
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Indie Flower
+  - Press Start 2P
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
