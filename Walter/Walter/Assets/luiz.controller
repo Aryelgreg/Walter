@@ -373,37 +373,61 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
+<<<<<<< HEAD
+    m_Controller: {fileID: 9100000}
+=======
     m_Controller: {fileID: 0}
+>>>>>>> 76f16f9ec33f78e3775af37cd5db48ef6ab302d4
   - m_Name: Parado
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
+<<<<<<< HEAD
+    m_Controller: {fileID: 9100000}
+=======
     m_Controller: {fileID: 0}
+>>>>>>> 76f16f9ec33f78e3775af37cd5db48ef6ab302d4
   - m_Name: Andando
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
+<<<<<<< HEAD
+    m_Controller: {fileID: 9100000}
+=======
     m_Controller: {fileID: 0}
+>>>>>>> 76f16f9ec33f78e3775af37cd5db48ef6ab302d4
   - m_Name: Pulando
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
+<<<<<<< HEAD
+    m_Controller: {fileID: 9100000}
+=======
     m_Controller: {fileID: 0}
+>>>>>>> 76f16f9ec33f78e3775af37cd5db48ef6ab302d4
   - m_Name: Caindo
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
+<<<<<<< HEAD
+    m_Controller: {fileID: 9100000}
+=======
     m_Controller: {fileID: 0}
+>>>>>>> 76f16f9ec33f78e3775af37cd5db48ef6ab302d4
   - m_Name: NoChao
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
+<<<<<<< HEAD
+    m_Controller: {fileID: 9100000}
+=======
     m_Controller: {fileID: 0}
+>>>>>>> 76f16f9ec33f78e3775af37cd5db48ef6ab302d4
   - m_Name: Morrer
     m_Type: 9
     m_DefaultFloat: 0
@@ -512,8 +536,13 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
+<<<<<<< HEAD
+  - m_ConditionMode: 2
+    m_ConditionEvent: NoAr
+=======
   - m_ConditionMode: 3
     m_ConditionEvent: 
+>>>>>>> 76f16f9ec33f78e3775af37cd5db48ef6ab302d4
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3001033724205041105}
