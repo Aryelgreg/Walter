@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Chao
+  - Moeda
+  - moeda
   layers:
   - Default
   - TransparentFX
@@ -40,4 +43,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: fundo
+    uniqueID: 2394888297
+    locked: 0
+  - name: atras dec
+    uniqueID: 2885067429
+    locked: 0
+  - name: ' frente dec'
+    uniqueID: 4156558681
+    locked: 0
+  - name: espinho
+    uniqueID: 2314014013
+    locked: 0
+  - name: moeda
+    uniqueID: 2418498633
+    locked: 0
+  - name: New Layer 6
+    uniqueID: 2906963741
     locked: 0
