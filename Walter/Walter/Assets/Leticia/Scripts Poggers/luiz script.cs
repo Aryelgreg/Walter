@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,8 @@ public class PersonagemController : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
+    private Dialogue dialogue; // Adicione uma referência ao script de diálogo
+    private DialogueControl dc;
 
     public float velocidadeMovimento = 5f;
     public float forcaPulo = 10f;
@@ -22,6 +25,9 @@ public class PersonagemController : MonoBehaviour
     private bool podePular = true;
     private bool podeDuploPulo = true;
     private bool estaGameOver = false;
+    bool canMove = true;
+    bool AtivarMetodo = true;
+
 
 
 
@@ -31,12 +37,14 @@ public class PersonagemController : MonoBehaviour
 
     [SerializeField] private GameObject GameOverLayer;
 
+
     private enum EstadoPersonagem
     {
         Parado,
         Andando,
         Pulando,
-        Caindo
+        Caindo,
+        Pulo2
     }
 
     private EstadoPersonagem estado = EstadoPersonagem.Parado;
@@ -47,6 +55,8 @@ public class PersonagemController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         vidaAtual = vidaMaxima;
+        dialogue = FindObjectOfType<Dialogue>(); // Encontre o script de diálogo
+        dc = FindObjectOfType<DialogueControl>();
     }
 
     void Update()
@@ -54,10 +64,28 @@ public class PersonagemController : MonoBehaviour
         // Verifique se o jogo está no estado de "Game Over" antes de permitir movimento ou ações do jogador
         if (!estaGameOver)
         {
-            HandleMovimento();
-            HandlePulo();
             UpdateAnimacoes();
+
+            if (AtivarMetodo == true)
+            {
+                HandleMovimento();
+                HandlePulo();
+            }
         }
+
+        if (dc.CloseDialogue == true)
+        {
+            canMove = true;
+        }
+
+        if (dialogue.dialogueActive == true)
+        {
+            canMove = false;
+        }
+        
+
+        
+
         // Outro código de atualização aqui...
     }
 
@@ -117,8 +145,14 @@ public class PersonagemController : MonoBehaviour
             {
                 rb.velocity = new Vector2(rb.velocity.x, forcaPulo);
                 podeDuploPulo = false;
-                estado = EstadoPersonagem.Pulando;
+                estado = EstadoPersonagem.Pulo2;
+
+               
+
+
+
             }
+           
         }
     }
 
@@ -134,24 +168,35 @@ public class PersonagemController : MonoBehaviour
                 animator.SetBool("Andando", false);
                 animator.SetBool("Pulando", false);
                 animator.SetBool("Caindo", false);
+                animator.SetBool("Pulo2", false);
                 break;
             case EstadoPersonagem.Andando:
                 animator.SetBool("Parado", false);
                 animator.SetBool("Andando", true);
                 animator.SetBool("Pulando", false);
                 animator.SetBool("Caindo", false);
+                animator.SetBool("Pulo2", false);
                 break;
             case EstadoPersonagem.Pulando:
                 animator.SetBool("Parado", false);
                 animator.SetBool("Andando", false);
                 animator.SetBool("Pulando", true);
                 animator.SetBool("Caindo", false);
+                animator.SetBool("Pulo2", false);
                 break;
             case EstadoPersonagem.Caindo:
                 animator.SetBool("Parado", false);
                 animator.SetBool("Andando", false);
                 animator.SetBool("Pulando", false);
                 animator.SetBool("Caindo", true);
+                animator.SetBool("Pulo2",false);
+                break;
+            case EstadoPersonagem.Pulo2:
+                animator.SetBool("Parado", false);
+                animator.SetBool("Andando", false);
+                animator.SetBool("Pulando", false);
+                animator.SetBool("Caindo",false);
+                animator.SetBool("Pulo2", true);
                 break;
         }
     }
@@ -207,5 +252,21 @@ public class PersonagemController : MonoBehaviour
     {
         moedasText.text = " " + moedas.ToString(); // Atualiza o texto na tela com o número de moedas coletadas
     }
+
+    private void FixedUpdate()
+    {
+        if (canMove == false)
+        {
+            AtivarMetodo = false;
+            rb.velocity = Vector2.zero;
+
+        }
+
+        else
+        {
+            AtivarMetodo = true;
+        }
+    }
+
 
 }
