@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Leticia/Scenes/tela menu principal.unity
     guid: fbaccf32e8ce9634380d20a97e8c5605
+  - enabled: 1
+    path: Assets/Lavinia/Scenes/Guerra 2.unity
+    guid: 518853e0921772647bf9d18ea22d247e
   m_configObjects: {}

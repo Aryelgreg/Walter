@@ -12,7 +12,7 @@ public class EfeitoParallax : MonoBehaviour
         MoveFundo();
     }
 
-    public void MoveFundo()
+    private void MoveFundo()
     {
         // Move a imagem de fundo
         transform.position = new Vector3(transform.position.x - velocidade * Time.deltaTime * Input.GetAxis("Horizontal"), 0, 0);
