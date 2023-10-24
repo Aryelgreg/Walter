@@ -24,6 +24,14 @@ public class DialogueControl : MonoBehaviour
     private string[] sentences;
     private int index;
 
+    private void Update()
+    {
+        if (Input.GetButtonDown("Fire2"))
+        {
+            NextSentence();
+        }
+    }
+
     public void Speech(string[] txt, string actorName)
     {
         dialogueObj.SetActive(true);
@@ -73,6 +81,8 @@ public class DialogueControl : MonoBehaviour
             GameObjectDinheiro.SetActive(true);
             ContadorMonetario.SetActive(true);
         }
+
+        
     }
 
 

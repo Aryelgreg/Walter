@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.TerrainTools;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class PersonagemController : MonoBehaviour
     private Animator animator;
     private Dialogue dialogue; // Adicione uma referência ao script de diálogo
     private DialogueControl dc;
+    private AudioController audioController;
 
     public float velocidadeMovimento = 5f;
     public float forcaPulo = 10f;
@@ -31,11 +33,15 @@ public class PersonagemController : MonoBehaviour
 
 
 
-    public Text moedasText;
+    public TextMeshProUGUI moedasText;
     private int moedasColetadas = 0;
     public int moedas;
+    [SerializeField] private AudioClip somMoeda; // Adicione uma referência ao arquivo de áudio da moeda
+    private AudioSource audioSource; // Crie uma referência para o componente de áudio
 
     [SerializeField] private GameObject GameOverLayer;
+
+    
 
 
     private enum EstadoPersonagem
@@ -57,7 +63,12 @@ public class PersonagemController : MonoBehaviour
         vidaAtual = vidaMaxima;
         dialogue = FindObjectOfType<Dialogue>(); // Encontre o script de diálogo
         dc = FindObjectOfType<DialogueControl>();
+        audioController = FindObjectOfType<AudioController>();
+
+        // Obtenha o componente de áudio do GameObject
+        audioSource = GetComponent<AudioSource>();
     }
+
 
     void Update()
     {
@@ -235,6 +246,8 @@ public class PersonagemController : MonoBehaviour
         if (GameOverLayer != null)
         {
             GameOverLayer.SetActive(true);
+            // Chame a função para tocar o som de Game Over
+            audioController.PlaySomGameOver();
         }
     }
     void OnTriggerEnter2D(Collider2D other)
@@ -244,8 +257,17 @@ public class PersonagemController : MonoBehaviour
             moedas++; // Incrementa o contador de moedas
             Destroy(other.gameObject); // Destroi a moeda coletada
             AtualizarTextoMoedas(); // Atualiza o texto na tela
+            TocarSomMoeda(); // Toca o som da moeda
         }
         
+    }
+
+    void TocarSomMoeda()
+    {
+        if (somMoeda != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(somMoeda);
+        }
     }
 
     void AtualizarTextoMoedas()

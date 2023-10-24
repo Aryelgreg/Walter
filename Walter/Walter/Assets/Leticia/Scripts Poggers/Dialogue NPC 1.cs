@@ -32,16 +32,30 @@ public class Dialogue : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetButtonDown("Fire2") && onRadious && !dialogueActive)
+        {
+            dc.Speech(speechTxt, actorName);
+            dialogueActive = true; // Marcar que o diálogo está ativo
+           
+        }
+
         if (Input.GetKeyDown(KeyCode.F) && onRadious && !dialogueActive)
         {
             dc.Speech(speechTxt, actorName);
             dialogueActive = true; // Marcar que o diálogo está ativo
-            
+
         }
+
         if (dc.CloseDialogue == true)
         {
             dialogueActive = false;
         }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            Debug.Log("Botão Fire1 pressionado e dentro da área de interação.");
+        }
+
     }
 
     public void Interact()
