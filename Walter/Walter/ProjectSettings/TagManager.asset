@@ -14,7 +14,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 
@@ -44,21 +44,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: fundo
-    uniqueID: 2394888297
+  - name: New Layer 1
+    uniqueID: 3595915971
     locked: 0
-  - name: atras dec
-    uniqueID: 2885067429
+  - name: New Layer 2
+    uniqueID: 3977810561
     locked: 0
-  - name: ' frente dec'
-    uniqueID: 4156558681
-    locked: 0
-  - name: espinho
-    uniqueID: 2314014013
-    locked: 0
-  - name: moeda
-    uniqueID: 2418498633
-    locked: 0
-  - name: New Layer 6
-    uniqueID: 2906963741
+  - name: New Layer 3
+    uniqueID: 1504673113
     locked: 0
